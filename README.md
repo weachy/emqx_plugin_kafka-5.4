@@ -124,4 +124,5 @@ Some examples in the directory `priv/example/`.
 #### Path
 
 - Default path： `emqx/etc/emqx_plugin_kafka.hocon`
+  CentOS： `/usr/lib/emqx/etc/emqx_plugin_kafka.hocon`
 - Attach to path:  set system environment variables  `export EMQX_PLUGIN_KAFKA_CONF="absolute_path"`
