@@ -1,0 +1,74 @@
+plugin_kafka {
+  // required
+  connection {
+    // Kafka client id: "emqx_plugin:kafka_client:${client_id}"
+    // optional   default:"emqx_plugin:kafka_client:emqx_plugin_kafka_connection"
+    client_id = "kafka_client"
+    // Kafka address.
+    // required
+    bootstrap_hosts = ["127.0.0.1:9092"]
+
+    // Reference type: kpro_connection:config().
+    // https://github.com/kafka4beam/kafka_protocol/blob/master/src/kpro_connection.erl
+    // optional   default:5s
+    connect_timeout = 5s
+    // enum: per_partition | per_broker
+    // optional   default:per_partition
+    connection_strategy = per_partition
+    // optional   default:5s
+    min_metadata_refresh_interval = 5s
+    // optional   default:true
+    query_api_versions = true
+    // optional   default:3s
+    request_timeout = 3s
+    ssl {
+      enable = false
+    }
+
+    //Emqx resource opts.
+    // optional   default:32s
+    health_check_interval = 32s
+  }
+
+  // optional
+  producer {
+    // Most number of bytes to collect into a produce request.
+    // optional   default:896KB
+    max_batch_bytes = 896KB
+    // enum:  no_compression | snappy | gzip
+    // optional   default:no_compression
+    compression = no_compression
+    // enum:  random | roundrobin | first_key_dispatch
+    // optional   default:random
+    partition_strategy = random
+
+    // Encode kafka value.
+    // enum:  plain | base64
+    // optional   default:plain
+    encode_payload_type = base64
+  }
+
+  // required
+  hooks = [
+    {
+      // Hook point.
+      // required
+      endpoint = message.publish
+      // Emqx topic pattern.
+      // 1. Cannot match the system message;
+      // 2. Cannot use filters that start with '+' or '#'.
+      // message required
+      filter = "up/#"
+      // Kafka topic, must be created in advance in Kafka.
+      // required
+      kafka_topic = mqtt_to_kafka
+      // Matching template, value = ${.} indicates that all keys match
+      // optional default:{timestamp = "${.timestamp}", value = "${.}",key = "${.clientid}"}
+      kafka_message = {
+        timestamp = "${.timestamp}"
+        value = "{\"action\":\"message_publish\",\"ts\":${.timestamp},\"topic\":\"${.topic}\",\"client_id\":\"${.clientid}\",\"payload\":\"${.payload}\"}"
+        key = "${.clientid}"
+      }
+    }
+  ]
+}
