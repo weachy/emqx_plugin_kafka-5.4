@@ -121,7 +121,7 @@ on_remove_channel(
 
 on_query_async(
     InstId,
-    {ChannelId, Message},
+    {ChannelId, #{payload := RawPayload} = Message},
     _,
     #{channels := Channels} = _ConnectorState
 ) ->
@@ -131,8 +131,7 @@ on_query_async(
         encode_payload_type := EncodePayloadType
     } = maps:get(ChannelId, Channels),
     try
-        EncodedPayload = encode_payload(EncodePayloadType, Message#message.payload),
-        UpdatedMessage = Message#message{payload = EncodedPayload},
+        UpdatedMessage = Message#{payload => encode_payload(EncodePayloadType, RawPayload)},
         KafkaMessage = render_message(Template, UpdatedMessage),
         do_send_msg(KafkaMessage, Producers)
     catch

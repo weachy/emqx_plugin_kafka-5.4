@@ -59,11 +59,6 @@ fields(connection) ->
                 desc => ?DESC("request_timeout")
             }
         )},
-        {sasl, ?HOCON(?R_REF(sasl),
-            #{
-                desc => ?DESC("sasl")
-            }
-        )},
         {ssl, ?HOCON(?R_REF(ssl),
             #{
                 desc => ?DESC("ssl")
@@ -82,28 +77,6 @@ fields(bootstrap_host) ->
             #{
                 validator => emqx_schema:servers_validator(
                     #{default_port => 9092}, _Required = true)
-            }
-        )}
-    ];
-fields(sasl) ->
-    [
-        {mechanism, ?HOCON(enum([plain, scram_sha_256, scram_sha_512]),
-            #{
-                default => plain,
-                desc => ?DESC("sasl_mechanism"),
-                required => true
-            }
-        )},
-        {username, ?HOCON(string(),
-            #{
-                desc => ?DESC("sasl_username"),
-                required => true
-            }
-        )},
-        {password, ?HOCON(string(),
-            #{
-                desc => ?DESC("sasl_password"),
-                required => true
             }
         )}
     ];
