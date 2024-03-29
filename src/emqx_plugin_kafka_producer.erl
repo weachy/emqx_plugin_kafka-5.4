@@ -38,7 +38,6 @@ on_start(
         min_metadata_refresh_interval => C(min_metadata_refresh_interval),
         query_api_versions => C(query_api_versions),
         request_timeout => C(request_timeout),
-        sasl => C(sasl),
         ssl => C(ssl)
     },
     ok = ensure_client(ClientId, Hosts, ClientConfig),

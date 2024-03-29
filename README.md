@@ -42,12 +42,6 @@ plugin_kafka {
     query_api_versions = true
     // optional   default:3s
     request_timeout = 3s
-    sasl {
-      // enum:  plain | scram_sha_256 | scram_sha_512
-      mechanism = plain
-      username = "username"
-      password = "password"
-    }
     ssl {
       enable = false
     }

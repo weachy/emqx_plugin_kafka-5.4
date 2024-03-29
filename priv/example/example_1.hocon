@@ -8,11 +8,6 @@ plugin_kafka {
     min_metadata_refresh_interval = 5s
     query_api_versions = true
     request_timeout = 3s
-    sasl {
-      mechanism = plain
-      username = "username"
-      password = "password"
-    }
     ssl {
       enable = false
     }

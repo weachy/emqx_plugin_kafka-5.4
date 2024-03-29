@@ -37,8 +37,6 @@ tr_config(bootstrap_hosts, Hosts) ->
     hosts(Hosts);
 tr_config(client_id, ClientId) ->
     client_id(ClientId);
-tr_config(sasl, Sasl) ->
-    sasl(Sasl);
 tr_config(ssl, Ssl) ->
     ssl(Ssl);
 tr_config(_Key, Value) ->
@@ -51,11 +49,6 @@ hosts([#{hostname := _, port := _} | _] = Servers) ->
     [{Hostname, Port} || #{hostname := Hostname, port := Port} <- Servers];
 hosts(Hosts) when is_list(Hosts) ->
     kpro:parse_endpoints(Hosts).
-
-sasl(#{mechanism := Mechanism, username := Username, password := Secret}) ->
-    {Mechanism, Username, Secret};
-sasl(_) ->
-    undefined.
 
 ssl(#{enable := true} = SSL) ->
     emqx_tls_lib:to_client_opts(SSL);
