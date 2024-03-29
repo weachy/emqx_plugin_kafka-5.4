@@ -131,7 +131,9 @@ on_query_async(
         encode_payload_type := EncodePayloadType
     } = maps:get(ChannelId, Channels),
     try
-        KafkaMessage = render_message(Template, Message, EncodePayloadType),
+        EncodedPayload = encode_payload(EncodePayloadType, Message#message.payload),
+        UpdatedMessage = Message#message{payload = EncodedPayload},
+        KafkaMessage = render_message(Template, UpdatedMessage),
         do_send_msg(KafkaMessage, Producers)
     catch
         Error:Reason :Stack ->
@@ -269,12 +271,11 @@ preproc_tmpl(Tmpl) ->
 
 render_message(
     #{key := KeyTemplate, value := ValueTemplate, timestamp := TimestampTemplate},
-    Message,
-    EncodePayloadType
+    Message
 ) ->
     #{
         key => render(KeyTemplate, Message),
-        value => encode_payload(EncodePayloadType, render(ValueTemplate, Message)),
+        value => render(ValueTemplate, Message),
         ts => render_timestamp(TimestampTemplate, Message)
     }.
 

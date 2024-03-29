@@ -25,11 +25,6 @@ fields(plugin_kafka) ->
     ];
 fields(connection) ->
     [
-        {client_id, ?HOCON(string(),
-            #{
-                desc => ?DESC("client_id"),
-                default => "client"
-            })},
         {bootstrap_hosts, bootstrap_hosts()},
         {connect_timeout, ?HOCON(emqx_schema:timeout_duration_ms(),
             #{
